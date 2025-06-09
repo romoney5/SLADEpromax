@@ -8,6 +8,10 @@ srb2lua {
 	block_end = "}";
 	word_block_begin = "do", "function", "if";
 	word_block_end = "end";
+	
+	keyword_link = "https://wiki.srb2.org/wiki/Lua/Syntax";
+	constant_link = "https://wiki.srb2.org/wiki/Constants";
+	function_link = "https://wiki.srb2.org/wiki/Lua/Functions";
 
 	keywords = {
 		and, break, continue, do, else, elseif, end, false, for, function,
@@ -17,10 +21,10 @@ srb2lua {
 
 	properties = {
 		// Namespaces
-		input, ease, hud, coroutine, string, io, table, os,
+		input, ease, hud, coroutine, string, io, table, os, color,
 
 		// Userdata
-		players, mobjs, skins, mapthings, sectors, subsectors, lines, sides, vertexes, polyobjects,
+		players, mobjs, skins, mapthings, sectors, subsectors, lines, sides, vertexes, polyobjects, tags,
 	}
 
 	constants = {
@@ -78,6 +82,8 @@ srb2lua {
 		FRACUNIT,
 		FRACBITS,
 		TICRATE,
+		NEWTICRATERATIO,
+		NEWTICRATE,
 		MUSICRATE,
 		RING_DIST,
 		PUSHACCEL,
@@ -175,6 +181,9 @@ srb2lua {
 		MFE_SPRUNG,
 		MFE_APPLYPMOMZ,
 		MFE_TRACERANGLE,
+		MFE_FORCESUPER,
+		MFE_FORCENOSUPER,
+		MFE_REVERSESUPER,
 
 		// Mapthing flags (MTF_*)
 		MTF_EXTRA,
@@ -348,6 +357,7 @@ srb2lua {
 		SF_NOSUPERJUMPBOOST,
 		SF_CANBUSTWALLS,
 		SF_NOSHIELDABILITY,
+		SF_FASTWAIT,
 
 		// Character abilities (CA_*, CA2_*)
 		CA_NONE,
@@ -560,6 +570,7 @@ srb2lua {
 		BT_WEAPONPREV,
 		BT_ATTACK,
 		BT_SPIN,
+		BT_USE, --old bt_spin
 		BT_CAMLEFT,
 		BT_CAMRIGHT,
 		BT_TOSSFLAG,
@@ -811,6 +822,8 @@ srb2lua {
 		SSF_ROPEHANG,
 		SSF_JUMPFLIP,
 		SSF_GRAVITYOVERRIDE,
+		SSF_NOPHYSICSFLOOR,
+		SSF_NOPHYSICSCEILING,
 
 		// Emblem flags (GE_*/ME_*)
 		GE_NIGHTSPULL,
@@ -1092,7 +1105,97 @@ srb2lua {
 		spriteinfo,
 		spr2defaults,
 		gamekeydown,
-
+		
+		// global variables
+		udmf,
+		gamemap,
+		maptol,
+		gamestate,
+		stagefailed,
+		ultimatemode,
+		mariomode,
+		twodlevel,
+		circuitmap,
+		stoppedclock,
+		netgame,
+		multiplayer,
+		modeattacking,
+		metalrecording,
+		splitscreen,
+		gamecomplete,
+		marathonmode,
+		devparm,
+		modifiedgame,
+		usedCheats,
+		paused,
+		bluescore,
+		redscore,
+		timelimit,
+		pointlimit,
+		redflag,
+		blueflag,
+		rflagpoint,
+		bflagpoint,
+		spstage_start,
+		spmarathon_start,
+		sstage_start,
+		sstage_end,
+		smpstage_start,
+		smpstage_end,
+		titlemap,
+		titlemapinaction,
+		bootmap,
+		tutorialmap,
+		tutorialmode,
+		skincolor_redteam,
+		skincolor_blueteam,
+		skincolor_redring,
+		skincolor_bluering,
+		invulntics,
+		sneakertics,
+		flashingtics,
+		tailsflytics,
+		underwatertics,
+		spacetimetics,
+		extralifetics,
+		nightslinktics,
+		gameovertics,
+		ammoremovaltics,
+		use1upSound,
+		maxXtraLife,
+		useContinues,
+		shareEmblems,
+		gametype,
+		gametyperules,
+		leveltime,
+		sstimer,
+		globalweather,
+		globallevelskynum,
+		server,
+		emeralds,
+		token,
+		gravity,
+		VERSION,
+		SUBVERSION,
+		VERSIONSTRING,
+		
+		curWeather,
+		levelskynum,
+		mapmusname,
+		mapmusflags,
+		mapmusposition,
+		consoleplayer,
+		displayplayer,
+		secondarydisplayplayer,
+		isserver,
+		isdedicatedserver,
+		camera,
+		camera2,
+		mouse,
+		mouse2,
+		menuactive,
+		chatactive,
+		
 		// Aliases
 		FU,
 		V_50TRANS,
@@ -1128,6 +1231,17 @@ srb2lua {
 		FixedTrunc = "fixed a";
 		FixedRound = "fixed a";
 		FixedCeil = "fixed a";
+		
+		fixmul = "fixed a, fixed b";
+		fixint = "fixed a";
+		fixdiv = "fixed a, fixed b";
+		fixrem = "fixed a, fixed b";
+		fixsqrt = "fixed a";
+		fixhypot = "fixed a, fixed b";
+		fixfloor = "fixed a";
+		fixtrunc = "fixed a";
+		fixround = "fixed a";
+		fixceil = "fixed a";
 
 		// Miscellanous
 		GetSecSpecial = "int special, int section";
@@ -1189,8 +1303,9 @@ srb2lua {
 		v.levelTitleWidth = "string text";
 		v.levelTitleHeight = "string text";
 
-		v.getColormap = "string/int skin, [int color]";
+		v.getColormap = "[string/int skin, [int color], [string translation]]";
 		v.getStringColormap = "int textcolor";
+		v.getSectorColormap = "[sector_t sector], fixed x, fixed y, fixed z, int lightlevel";
 
 		v.fadeScreen = "int color, int strength";
 
@@ -1276,6 +1391,7 @@ srb2lua {
 		G_CompetitionGametype;
 		G_AddPlayer = "int skin, int color, string name, int bottype";
 		G_RemovePlayer = "int player num";
+		G_SetUsedCheats = "boolean silent";
 		G_TicsToHours = "int tics";
 		G_TicsToMinutes = "int tics, [boolean full]";
 		G_TicsToSeconds = "int tics";
@@ -1342,6 +1458,9 @@ srb2lua {
 		P_DoSpring = "mobj_t spring, mobj_t object";
 		P_TryCameraMove = "camera_t cam, fixed x, fixed y";
 		P_TeleportCameraMove = "camera_t cam, fixed x, fixed y, fixed z";
+		P_LineIsBlocking = "mobj_t mo, line_t li";
+		P_GetSectorColormapAt = "sector_t sector, fixed x, fixed y, fixed z";
+		P_GetSectorLightLevelAt = "sector_t sector, fixed x, fixed y, fixed z";
 
 		// P_Maputl
 		P_AproxDistance = "fixed dx, fixed dy";
@@ -1385,12 +1504,13 @@ srb2lua {
 		P_RingZMovement = "mobj_t mobj";
 		P_SceneryZMovement = "mobj_t mobj";
 		P_PlayerZMovement = "mobj_t mobj";
+		P_CheckSkyHit = "mobj_t mo, line_t line";
 
 		// P_Polyobj
 		polyobjects.GetForNum = "polyobj_t polyobject, int id";
 
 		// P_Slopes
-		P_GetZAt = "pslope_t slope, fixed x, fixed y";
+		P_GetZAt = "pslope_t slope, fixed x, fixed y, [fixed z]";
 		P_ButteredSlope = "mobj_t mobj";
 
 		// P_Spec
@@ -1399,6 +1519,7 @@ srb2lua {
 		P_DoSuperTransformation = "player_t player, [boolean giverings]";
 		P_ExplodeMissile = "mobj_t missile";
 		P_PlayerTouchingSectorSpecial = "player_t player, int section, int specialnum";
+		P_PlayerTouchingSectorSpecialFlag = "player_t player, int flags";
 		P_FindLowestFloorSurrounding = "sector_t sector";
 		P_FindHighestFloorSurrounding = "sector_t sector";
 		P_FindLowestCeilingSurrounding = "sector_t sector";
@@ -1454,7 +1575,7 @@ srb2lua {
 		P_NukeEnemies = "mobj_t inflictor, mobj_t source, fixed radius";
 		P_HomingAttack = "mobj_t source, mobj_t target";
 		P_SuperReady = "player_t player";
-		P_DoJump = "player_t player, [boolean soundandstate]";
+		P_DoJump = "player_t player, [boolean soundandstate, [boolean allowflip]]";
 		P_SpawnThokMobj = "player_t player";
 		P_SpawnSpinMobj = "player_t player, int type";
 		P_Telekinesis = "player_t player, fixed thrust, fixed range";
@@ -1553,6 +1674,7 @@ srb2lua {
 		setfenv = "function/int f, table{} t";
 		setmetatable = "table{} t, table{} metatable";
 		tonumber = "* e, [int base]";
+		tofixed = "* e";
 		tostring = "* e";
 		type = "* v";
 		unpack = "table{} list, [int start], [int end]";
@@ -1600,5 +1722,16 @@ srb2lua {
 		os.time = "[table{} time]";
 		os.date = "[string format], [int time]";
 		os.difftime = "int t1, int t2";
+		
+		// color library
+		color.paletteToRgb = "int color";
+		color.rgbToPalette = "int red, int green, int blue";
+		color.hslToRgb = "int hue, int saturation, int luminance";
+		color.rgbToHsl = "int red, int green, int blue";
+		color.rgbToHex = "int red, int green, int blue, [int alpha]";
+		color.hexToRgb = "string webcolor";
+		color.packRgb = "int red, int green, int blue";
+		color.packRgba = "int red, int green, int blue, int alpha";
+		color.unpackRgb = "int rgb";
 	}
 }
