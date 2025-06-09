@@ -33,7 +33,10 @@ jobs:
 
           - name: "Linux Clang"
             os: ubuntu-24.04
+            release: true
             shell: bash
+            package_name: "linux_x64"
+            artifact-path: build/*
             extra_options: "-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
 
     steps:
