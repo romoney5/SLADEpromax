@@ -570,7 +570,7 @@ srb2lua {
 		BT_WEAPONPREV,
 		BT_ATTACK,
 		BT_SPIN,
-		BT_USE, --old bt_spin
+		BT_USE,
 		BT_CAMLEFT,
 		BT_CAMRIGHT,
 		BT_TOSSFLAG,
